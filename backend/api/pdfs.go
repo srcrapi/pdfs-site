@@ -68,5 +68,5 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.HandleFunc("/", pdfHandler)
+	http.HandleFunc("/api/pdfs", pdfHandler)
 }
