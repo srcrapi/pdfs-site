@@ -7,8 +7,10 @@
 	let pdfsData: PdfsDataProp[] | null = $state(null)
 	let searchQuery = $state("")
 
+	let apiUrl = import.meta.env.DEV ? "http://localhost:8000" : "https://apipdfs.vercel.app"
+
 	$effect(() => {
-		fetch("http://localhost:8000")
+		fetch(apiUrl)
 		.then(resp => {
 			if (!resp.ok) throw new Error("failed to get response")
 
