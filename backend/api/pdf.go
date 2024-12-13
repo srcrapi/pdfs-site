@@ -18,7 +18,7 @@ type Pdf struct {
 
 const baseGithubApiUrl string = "https://api.github.com"
 
-func Handler(w http.ResponseWriter, r *http.Request) {
+func Handler(w http.ResponseWriter, req *http.Request) {
 	err := godotenv.Load("../.env")
 	if err != nil {
 		log.Fatalf("Failed to load .env file: %s", err)
@@ -34,7 +34,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 	pdfsUrl := fmt.Sprintf("%s/repos/kyotosplit/books/contents/pdfs?ref=main", baseGithubApiUrl)
 
-	req, err := http.NewRequest(http.MethodGet, pdfsUrl, nil)
+	req, err = http.NewRequest(http.MethodGet, pdfsUrl, nil)
 	if err != nil {
 		log.Fatalf("client: failed to create a new request: %s", err)
 	}
