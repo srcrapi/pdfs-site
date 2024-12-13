@@ -21,7 +21,7 @@ const baseGithubApiUrl string = "https://api.github.com"
 func pdfHandler(w http.ResponseWriter, req *http.Request) {
 	githubToken := os.Getenv("GITHUB_TOKEN")
 
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:8000")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
 	w.Header().Set("Access-Control-Allow-Methods", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 	w.Header().Set("Content-Type", "application/json")
