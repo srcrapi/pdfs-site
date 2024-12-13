@@ -65,9 +65,9 @@ declare module '$env/static/private' {
 	export const PWD: string;
 	export const NIX_PROFILES: string;
 	export const npm_package_devDependencies_vite: string;
+	export const XDG_SESSION_DESKTOP: string;
 	export const FLOAX_WIDTH: string;
 	export const LOGNAME: string;
-	export const XDG_SESSION_DESKTOP: string;
 	export const STEAM_EXTRA_COMPAT_TOOLS_PATH: string;
 	export const QT_QPA_PLATFORMTHEME: string;
 	export const XDG_SESSION_TYPE: string;
@@ -245,9 +245,9 @@ declare module '$env/dynamic/private' {
 		PWD: string;
 		NIX_PROFILES: string;
 		npm_package_devDependencies_vite: string;
+		XDG_SESSION_DESKTOP: string;
 		FLOAX_WIDTH: string;
 		LOGNAME: string;
-		XDG_SESSION_DESKTOP: string;
 		STEAM_EXTRA_COMPAT_TOOLS_PATH: string;
 		QT_QPA_PLATFORMTHEME: string;
 		XDG_SESSION_TYPE: string;
