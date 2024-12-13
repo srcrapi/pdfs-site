@@ -18,7 +18,7 @@ type Pdf struct {
 
 const baseGithubApiUrl string = "https://api.github.com"
 
-func PdfHandler(w http.ResponseWriter, req *http.Request) {
+func Handler(w http.ResponseWriter, req *http.Request) {
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatalf("Failed to load .env file: %s", err)
@@ -62,7 +62,6 @@ func PdfHandler(w http.ResponseWriter, req *http.Request) {
 	json.NewEncoder(w).Encode(pdfs)
 }
 
-/*
 func Server() {
 	err := godotenv.Load("../../.env")
 	if err != nil {
@@ -71,7 +70,7 @@ func Server() {
 
 	const port string = ":8000"
 
-	http.HandleFunc("/", PdfHandler)
+	http.HandleFunc("/", Handler)
 	fmt.Printf("Listening on http://localhost%s", port)
 
 	err = http.ListenAndServe(port, nil)	
@@ -80,4 +79,3 @@ func Server() {
 		log.Fatalf("Error ocurred trying to start the server: %s", err)
 	}
 }
-*/
