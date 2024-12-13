@@ -1,4 +1,4 @@
-package main 
+package handler
 
 import (
 	"encoding/json"
@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
@@ -18,8 +19,8 @@ type Pdf struct {
 
 const baseGithubApiUrl string = "https://api.github.com"
 
-func pdfHandler(w http.ResponseWriter, req *http.Request) {
-	err := godotenv.Load(".env")
+func pdfHandler(c *gin.Context) {
+	err := godotenv.Load("../.env")
 	if err != nil {
 		log.Fatalf("Failed to load .env file: %s", err)
 	}
@@ -27,14 +28,14 @@ func pdfHandler(w http.ResponseWriter, req *http.Request) {
 
 	githubToken := os.Getenv("GITHUB_TOKEN")
 
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
-	w.Header().Set("Access-Control-Allow-Methods", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-	w.Header().Set("Content-Type", "application/json")
+	c.Header("Access-Control-Allow-Origin", "http://localhost:5173")
+	c.Header("Access-Control-Allow-Methods", "*")
+	c.Header("Access-Control-Allow-Headers", "Content-Type, Authorization")
+	c.Header("Content-Type", "application/json")
 
 	pdfsUrl := fmt.Sprintf("%s/repos/kyotosplit/books/contents/pdfs?ref=main", baseGithubApiUrl)
 
-	req, err = http.NewRequest(http.MethodGet, pdfsUrl, nil)
+	req, err := http.NewRequest(http.MethodGet, pdfsUrl, nil)
 	if err != nil {
 		log.Fatalf("client: failed to create a new request: %s", err)
 	}
@@ -59,9 +60,10 @@ func pdfHandler(w http.ResponseWriter, req *http.Request) {
 		log.Fatalf("server: failed to parse json data: %s", err)
 	}
 
-	json.NewEncoder(w).Encode(pdfs)
+	c.JSON(http.StatusOK, pdfs)
 }
 
+/*
 func main() {
 	err := godotenv.Load("../../.env")
 	if err != nil {
@@ -70,7 +72,7 @@ func main() {
 
 	const port string = ":8000"
 
-	http.HandleFunc("/", pdfHandler)
+	http.HandleFunc("/", Handler)
 	fmt.Printf("Listening on http://localhost%s", port)
 
 	err = http.ListenAndServe(port, nil)	
@@ -78,4 +80,14 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error ocurred trying to start the server: %s", err)
 	}
+}
+*/
+
+func Handler(w http.ResponseWriter, r *http.Request) {
+	gin.SetMode(gin.ReleaseMode)
+	app := gin.New()
+
+	app.GET("/api/pdfs", pdfHandler)
+
+	app.ServeHTTP(w, r)
 }
