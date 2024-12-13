@@ -2,7 +2,7 @@ import os
 from urllib.parse import quote
 
 import dotenv
-import httpx
+import requests
 
 dotenv.load_dotenv()
 
@@ -14,7 +14,7 @@ async def pdfs_handler():
 
     headers = {"Authorization": f"token {github_token}"}
 
-    resp = httpx.get(pdfs_url, headers=headers)
+    resp = requests.get(pdfs_url, headers=headers)
 
     if resp.status_code != 200:
         return {"error": resp.raise_for_status()}
