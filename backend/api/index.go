@@ -58,26 +58,6 @@ func pdfHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(pdfs)
 }
 
-/*
-func main() {
-	err := godotenv.Load("../../.env")
-	if err != nil {
-		log.Fatalf("Failed to load .env file: %s", err)
-	}
-
-	const port string = ":8000"
-
-	http.HandleFunc("/", Handler)
-	fmt.Printf("Listening on http://localhost%s", port)
-
-	err = http.ListenAndServe(port, nil)	
-
-	if err != nil {
-		log.Fatalf("Error ocurred trying to start the server: %s", err)
-	}
-}
-*/
-
 func Handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
 	w.Header().Set("Access-Control-Allow-Methods", "*")
