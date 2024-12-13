@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
@@ -19,7 +18,7 @@ type Pdf struct {
 
 const baseGithubApiUrl string = "https://api.github.com"
 
-func pdfHandler(c *gin.Context) {
+func Handler(w http.ResponseWriter, r *http.Request) {
 	err := godotenv.Load("../.env")
 	if err != nil {
 		log.Fatalf("Failed to load .env file: %s", err)
@@ -28,10 +27,10 @@ func pdfHandler(c *gin.Context) {
 
 	githubToken := os.Getenv("GITHUB_TOKEN")
 
-	c.Header("Access-Control-Allow-Origin", "http://localhost:5173")
-	c.Header("Access-Control-Allow-Methods", "*")
-	c.Header("Access-Control-Allow-Headers", "Content-Type, Authorization")
-	c.Header("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
+	w.Header().Set("Access-Control-Allow-Methods", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+	w.Header().Set("Content-Type", "application/json")
 
 	pdfsUrl := fmt.Sprintf("%s/repos/kyotosplit/books/contents/pdfs?ref=main", baseGithubApiUrl)
 
@@ -60,7 +59,7 @@ func pdfHandler(c *gin.Context) {
 		log.Fatalf("server: failed to parse json data: %s", err)
 	}
 
-	c.JSON(http.StatusOK, pdfs)
+	json.NewEncoder(w).Encode(pdfs)
 }
 
 /*
@@ -82,12 +81,3 @@ func main() {
 	}
 }
 */
-
-func Handler(w http.ResponseWriter, r *http.Request) {
-	gin.SetMode(gin.ReleaseMode)
-	app := gin.New()
-
-	app.GET("/api/pdfs", pdfHandler)
-
-	app.ServeHTTP(w, r)
-}
