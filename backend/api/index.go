@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
@@ -19,8 +18,8 @@ type Pdf struct {
 
 const baseGithubApiUrl string = "https://api.github.com"
 
-func pdfHandler(c *gin.Context) {
-	err := godotenv.Load("../.env")
+func pdfHandler(w http.ResponseWriter, r *http.Request) {
+	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatalf("Failed to load .env file: %s", err)
 	}
@@ -55,8 +54,8 @@ func pdfHandler(c *gin.Context) {
 		log.Fatalf("server: failed to parse json data: %s", err)
 	}
 
-	// json.NewEncoder(w).Encode(pdfs)
-	c.JSON(http.StatusOK, pdfs)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(pdfs)
 }
 
 /*
@@ -79,26 +78,15 @@ func main() {
 }
 */
 
-func CORSMiddlesware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "*")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+func Handler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
+	w.Header().Set("Access-Control-Allow-Methods", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
-		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(http.StatusNoContent)
-			return
-		}
-		c.Next()
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusNoContent)
+		return
 	}
-}
 
-func Handler(c *gin.Context) {
-	gin.SetMode(gin.ReleaseMode)
-	app := gin.Default()
-
-	app.Use(CORSMiddlesware())
-	app.GET("/api/pdfs", pdfHandler)
-
-	app.ServeHTTP(c.Writer, c.Request)
+	http.HandleFunc("/", pdfHandler)
 }
