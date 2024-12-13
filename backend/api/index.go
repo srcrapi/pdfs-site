@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
@@ -18,7 +19,7 @@ type Pdf struct {
 
 const baseGithubApiUrl string = "https://api.github.com"
 
-func Handler(w http.ResponseWriter, req *http.Request) {
+func pdfHandler(c *gin.Context) {
 	err := godotenv.Load("../.env")
 	if err != nil {
 		log.Fatalf("Failed to load .env file: %s", err)
@@ -27,14 +28,9 @@ func Handler(w http.ResponseWriter, req *http.Request) {
 
 	githubToken := os.Getenv("GITHUB_TOKEN")
 
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
-	w.Header().Set("Access-Control-Allow-Methods", "*")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-	w.Header().Set("Content-Type", "application/json")
-
 	pdfsUrl := fmt.Sprintf("%s/repos/kyotosplit/books/contents/pdfs?ref=main", baseGithubApiUrl)
 
-	req, err = http.NewRequest(http.MethodGet, pdfsUrl, nil)
+	req, err := http.NewRequest(http.MethodGet, pdfsUrl, nil)
 	if err != nil {
 		log.Fatalf("client: failed to create a new request: %s", err)
 	}
@@ -59,7 +55,8 @@ func Handler(w http.ResponseWriter, req *http.Request) {
 		log.Fatalf("server: failed to parse json data: %s", err)
 	}
 
-	json.NewEncoder(w).Encode(pdfs)
+	// json.NewEncoder(w).Encode(pdfs)
+	c.JSON(http.StatusOK, pdfs)
 }
 
 /*
@@ -81,3 +78,27 @@ func main() {
 	}
 }
 */
+
+func CORSMiddlesware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(http.StatusNoContent)
+			return
+		}
+		c.Next()
+	}
+}
+
+func Handler(c *gin.Context) {
+	gin.SetMode(gin.ReleaseMode)
+	app := gin.Default()
+
+	app.Use(CORSMiddlesware())
+	app.GET("/api/pdfs", pdfHandler)
+
+	app.ServeHTTP(c.Writer, c.Request)
+}
