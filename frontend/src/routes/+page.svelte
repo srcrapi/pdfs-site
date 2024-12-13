@@ -1,7 +1,7 @@
 <script lang="ts">
 	interface PdfsDataProp {
 		name: string
-		download_url: string
+		url: string
 	}
 
 	let pdfsData: PdfsDataProp[] | null = $state(null)
@@ -46,7 +46,7 @@
 			{#each filteredPdfs as pdf}
 				<p class="p-1 hover:bg-zinc-900 hover:rounded-md">
 					<a
-					href={pdf.download_url}
+					href={pdf.url}
 					>
 					{pdf.name.split(".")[0]}
 					</a>
