@@ -32,7 +32,21 @@
 
 <main class="h-svh flex flex-col items-center justify-center space-y-5 text-white">
 {#if pdfsData}
-	<h1 class="text-5xl font-bold mb-10">PDFs</h1>
+	<div class="space-y-2 mb-10 flex flex-col items-center">
+		<h1 class="text-5xl font-bold">PDFs</h1>
+		<p 
+		class="text-lg"
+		>
+		If you want to contribute,
+		<a 
+		href="https://github.com/srcrapi/pdfs-site"
+		target="_blank"
+		class="text-slate-400 hover:text-secondary"
+		>
+		click here
+		</a>
+		</p>
+	</div>
 
 	<input 
 	type="text" 
