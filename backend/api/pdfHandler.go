@@ -18,7 +18,13 @@ type Pdf struct {
 
 const baseGithubApiUrl string = "https://api.github.com"
 
-func pdfHandler(w http.ResponseWriter, req *http.Request) {
+func handler(w http.ResponseWriter, req *http.Request) {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatalf("Failed to load .env file: %s", err)
+	}
+
+
 	githubToken := os.Getenv("GITHUB_TOKEN")
 
 	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
@@ -28,7 +34,7 @@ func pdfHandler(w http.ResponseWriter, req *http.Request) {
 
 	pdfsUrl := fmt.Sprintf("%s/repos/kyotosplit/books/contents/pdfs?ref=main", baseGithubApiUrl)
 
-	req, err := http.NewRequest(http.MethodGet, pdfsUrl, nil)
+	req, err = http.NewRequest(http.MethodGet, pdfsUrl, nil)
 	if err != nil {
 		log.Fatalf("client: failed to create a new request: %s", err)
 	}
@@ -56,6 +62,7 @@ func pdfHandler(w http.ResponseWriter, req *http.Request) {
 	json.NewEncoder(w).Encode(pdfs)
 }
 
+/*
 func main() {
 	err := godotenv.Load("../../.env")
 	if err != nil {
@@ -64,7 +71,7 @@ func main() {
 
 	const port string = ":8000"
 
-	http.HandleFunc("/", pdfHandler)
+	http.HandleFunc("/", handler)
 	fmt.Printf("Listening on http://localhost%s", port)
 
 	err = http.ListenAndServe(port, nil)	
@@ -73,3 +80,4 @@ func main() {
 		log.Fatalf("Error ocurred trying to start the server: %s", err)
 	}
 }
+*/
