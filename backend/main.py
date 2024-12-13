@@ -14,8 +14,8 @@ app.add_middleware(
 )
 
 
-@app.get("/pdfs")
-async def pdfs():
+@app.get("/")
+async def index():
     pdfs_data = await pdfs_handler()
 
     return pdfs_data
