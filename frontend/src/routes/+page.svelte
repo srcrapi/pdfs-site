@@ -39,7 +39,7 @@
 		>
 		If you want to contribute,
 		<a 
-		href="https://github.com/srcrapi/pdfs-site"
+		href="https://github.com/kyotosplit/books"
 		target="_blank"
 		class="text-slate-400 hover:text-secondary"
 		>
