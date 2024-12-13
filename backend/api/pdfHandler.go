@@ -62,6 +62,7 @@ func PdfHandler(w http.ResponseWriter, req *http.Request) {
 	json.NewEncoder(w).Encode(pdfs)
 }
 
+/*
 func Server() {
 	err := godotenv.Load("../../.env")
 	if err != nil {
@@ -79,3 +80,4 @@ func Server() {
 		log.Fatalf("Error ocurred trying to start the server: %s", err)
 	}
 }
+*/
